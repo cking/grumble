@@ -214,6 +214,11 @@ func (a *App) RunCommand(args []string) error {
 	return nil
 }
 
+// Readline instance
+func (a *App) Readline() *readline.Instance {
+	return a.rl
+}
+
 // Run the application and parse the command line arguments.
 // This method blocks.
 func (a *App) Run() (err error) {
