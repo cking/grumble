@@ -45,6 +45,7 @@ type App struct {
 	commands      Commands
 	isShell       bool
 	currentPrompt string
+	promptActive  bool
 
 	flags   Flags
 	flagMap FlagMap
@@ -219,6 +220,16 @@ func (a *App) Readline() *readline.Instance {
 	return a.rl
 }
 
+// Refresh readline
+func (a *App) Refresh() bool {
+	if !a.promptActive {
+		return false
+	}
+	
+	a.rl.Refresh()
+	return true
+}
+
 // Run the application and parse the command line arguments.
 // This method blocks.
 func (a *App) Run() (err error) {
@@ -351,7 +362,9 @@ Loop:
 		multiActive = false
 
 		// Readline.
+		a.promptActive = true
 		line, err := a.rl.Readline()
+		a.promptActive = false
 		if err != nil {
 			if err == readline.ErrInterrupt {
 				interruptCount++
